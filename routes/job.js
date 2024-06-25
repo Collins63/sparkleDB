@@ -3,7 +3,7 @@ const jobController = require('../controllers/jobController');
 
 router.post('/', jobController.createJob);
 
-router.get('/', jobController.getAllJobs);
+router.get('/:id', jobController.getAllJobs);
 
 router.get('/search/:key', jobController.searchJobs);
 
