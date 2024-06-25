@@ -53,9 +53,9 @@ module.exports = {
         try {
             let jobs;
             if(recent){
-                jobs = await Job.findById({} ,{createdAt:0 , updatedAt:0, _V:0}).sort({createdAt: -1}).limit(2)
+                jobs = await Job.find({} ,{createdAt:0 , updatedAt:0, _V:0}).sort({createdAt: -1}).limit(2)
             }else{
-                jobs = await Job.findById({} ,{createdAt:0 , updatedAt:0, _V:0})
+                jobs = await Job.find({} ,{createdAt:0 , updatedAt:0, _V:0})
             }
             res.status(200).json(jobs)
         } catch (error) {
