@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema(
             required: true,
             default:"https://img.icons8.com/officel/80/user.png",
         }
-    }
-);
+    },{timestamps:true}
+);  
 
 module.exports = mongoose.model("User" , UserSchema)
