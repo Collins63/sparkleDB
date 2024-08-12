@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const jobRouter = require('./routes/job');
 const authRoute = require('./routes/auth');
+const userroute = require('./routes/user');
 const bodyParser = require('body-parser')
 
 dotenv.config();
@@ -14,7 +15,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use('/api/jobs' , jobRouter);
 app.use("/api/", authRoute);
- 
+app.use("/api/users" , userroute);
 
 
 app.listen(process.env.PORT  || PORT, () => {

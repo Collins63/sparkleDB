@@ -28,7 +28,8 @@ module.exports={
             const decryptedpass = CryptoJS.AES.decrypt(user.password , process.env.SECRET);
             const depassword = decryptedpass.toString(CryptoJS.enc.Utf8);
 
-            depassword !== req.body.password && res.status(401).json("Wrong Password");
+            // depassword !== req.body.password && res.status(401).json("Wrong Password");
+            user.password !== req.body.password && res.status(401).json("Wrong Password");
             res.status(200).json(user);
         } catch (error) {
             res.status(500);
