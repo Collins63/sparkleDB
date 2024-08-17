@@ -23,7 +23,17 @@ const verifyAndAuthorization = (req, res, next) => {
         }else{
             res.status(403).json("You Are Restricted From Performing This Operation")
         }
+    }) 
+};
+const verifyAndAdmin = (req, res, next) => {
+    verifyToken(req, res, () => {
+        if (req.user.isAdmin){
+            next();
+        }else{
+            res.status(403).json("You Are Restricted From Performing This Operation")
+        }
     })
-}
+} 
 
-module.exports = { verifyToken , verifyAndAuthorization  }
+
+module.exports = { verifyToken , verifyAndAuthorization , verifyAndAdmin }

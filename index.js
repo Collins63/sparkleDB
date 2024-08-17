@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const jobRouter = require('./routes/job');
 const authRoute = require('./routes/auth');
 const userroute = require('./routes/user');
+const bookMarkRoute = require("./routes/bookmark");
 const bodyParser = require('body-parser')
 
 dotenv.config();
@@ -16,6 +17,7 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use('/api/jobs' , jobRouter);
 app.use("/api/", authRoute);
 app.use("/api/users" , userroute);
+app.use("/api/bookmarks" , bookMarkRoute );
 
 
 app.listen(process.env.PORT  || PORT, () => {
