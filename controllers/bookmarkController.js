@@ -1,14 +1,20 @@
 const Bookmark = require("../models/Bookmark");
+const Job = require("../models/Job");
 
 module.exports = {
     createBookmark: async (req, res) => {
-        const newBook = new Bookmark(req.body);
-
+        const jobID = req.body.job;
         try {
-            await newBook.save();
-            res.status(200).json("BookMark Successfully Created");
+            const job = await Job.findById(jobID);
+            if(!job){
+                return res.status(400).json({error: "Job Not Found"});
+            }
+            const newBook = new Bookmark({job: job , userId: req.user.id});
+            const savedBookmark = await newBook.save();
+            const {_v, updatedAt , ...newBookmarkInfo} = savedBookmark._doc;
+            res.status(200).json(newBookmarkInfo)
         } catch (error) {
-            res.status(500).json(error);
+            res.status(500).json(error)
         }
     },
     deleteController: async (req, res) => {
