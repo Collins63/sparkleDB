@@ -6,6 +6,7 @@ const {verifyAndAuthorization , verifyToken , verifyAndAdmin } = require("../mid
 
 // using token  router.put("/:id" , verifyAndAuthorization , userController.updateUser);
 router.put("/:id" , verifyAndAuthorization, userController.updateUser);
+
 //get user
 router.get('/:id', userController.getUser);
 

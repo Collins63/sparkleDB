@@ -10,6 +10,13 @@ const bookMarkRoute = require("./routes/bookmark");
 const bodyParser = require('body-parser')
 
 dotenv.config();
+
+const admin= require('firebase-admin');
+const serviceAccount = require('./servicesAccountKey.json');
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
 mongoose.connect(process.env.MONGO_URL).then(()=> console.log('connected to sparkle')).catch((err)=>console.log(err));
 
 app.use(bodyParser.json())

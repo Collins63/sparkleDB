@@ -6,11 +6,13 @@ const verifyToken = (req , res , next) => {
     if (authHeader) {
         const token = authHeader.split(" ")[1];
         jwt.verify(token , process.env.JWT_SEC , async (err , user) => {
-            if (err) res.status(403).json('Invalid Token')
-                req.user = user;
-            console.log(user)
+            if (err) {
+                return res.status(403).json('Invalid Token');
+            }
+            req.user = user;
+            console.log("User verified:", user);
             next();
-        })
+        });
     }else{
         return res.status(401).json("You're Not Authenticated")
     }
