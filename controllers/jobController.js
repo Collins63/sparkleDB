@@ -6,7 +6,7 @@ module.exports = {
 
         try {
             await newJob.save();
-            res.status(201).json({status: true , message:'Job Created'});
+            res.status(200).json({status: true , message:'Job Created'});
         } catch (error) {
             res.status(500).json(error); 
         }
@@ -42,6 +42,16 @@ module.exports = {
         try {
             const job = await Job.findById({_id:jobId} ,{createdAt:0 , _V:0});
             res.status(200).json(job);
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+    getAgentJobs: async(req, res) =>{
+        const agentId = req.params.agentId;
+        try {
+            const jobs = await Job.find({agentId: agentId} ,{createdAt:0 , updatedAt:0, _V:0});
+            res.status(200).json(jobs);
         } catch (error) {
             res.status(500).json(error);
         }

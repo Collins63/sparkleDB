@@ -9,6 +9,8 @@ router.get('/search/:key', jobController.searchJobs);
 
 router.get('/:id', jobController.getJob);
 
+router.get('/agent/:agentId', jobController.getAgentJobs);
+
 router.put('/:id', jobController.updateJob);
 
 router.delete('/:id', jobController.deleteJob);

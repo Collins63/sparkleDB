@@ -4,52 +4,82 @@ const jwt =  require("jsonwebtoken");
 const admin = require("firebase-admin");
 
 module.exports={
-    createUser: async  (req, res) =>{
-        // const newUser = new User({
-        //     username: req.body.username,
-        //     email: req.body.email,
-        //     //CryptoJS.AES.encrypt(req.body.password , process.env.SECRET)
-        //     password: CryptoJS.AES.encrypt(req.body.password , process.env.SECRET).toString(),
-        //     location: req.body.location,
-        // });
+    // createUser: async  (req, res) =>{
+    //     const user  = req.body;
+    //     try {
+    //         await admin.auth().getUserByEmail(user.email);
+    //         return res.status(400).json({message: "User already exists"});
+    //     } catch (error) {
+    //         if(error.code === 'auth/user-not-found'){
+    //             try {
+    //                 const userResponse = await admin.auth().createUser({
+    //                     email : user.email,
+    //                     password: user.password,
+    //                     emailVerified: false,
+    //                     disabled: false,
+    //                 });
+    //                 console.log(userResponse.uid);
 
-        // try {
-        //     const savedUser = await newUser.save();
-        //     res.status(201).json(savedUser);
-        // } catch (error) { 
-        //     res.status(500).json(error)
-        // }
-        const user  = req.body;
-        try {
-            await admin.auth().getUserByEmail(user.email);
-            return res.status(400).json({message: "User already exists"});
-        } catch (error) {
-            if(error.code === 'auth/user-not-found'){
-                try {
-                    const userResponse = await admin.auth().createUser({
-                        email : user.email,
-                        password: user.password,
-                        emailVerified: false,
-                        disabled: false,
-                    });
-                    console.log(userResponse.uid);
+    //                 const newUser = new User({
+    //                     uid: userResponse.uid,
+    //                     username: user.username,
+    //                     email: user.email,
+    //                     password: CryptoJS.AES.encrypt(user.password , process.env.SECRET).toString(),
+    //                     location: user.location,
+    //                     isAgent: user.isAgent,
+    //                 })
+    //                 await newUser.save();
+    //                 res.status(201).json({status:true});
+    //             } catch (error) {
+    //                 res.status(500).json({error: 'Error occurred trying to create account'});
+    //             }
+    //         }
+    //     }
+    // },
+    createUser: async (req, res) => {
+  const user = req.body;
+  try {
+    // Check if user already exists
+    await admin.auth().getUserByEmail(user.email);
+    return res.status(400).json({ message: "User already exists" });
+  } catch (error) {
+    if (error.code === 'auth/user-not-found') {
+      try {
+        // Create Firebase user
+        const userResponse = await admin.auth().createUser({
+          email: user.email,
+          password: user.password,
+          emailVerified: false,
+          disabled: false,
+        });
+        console.log("Firebase UID:", userResponse.uid);
 
-                    const newUser = new User({
-                        uid: userResponse.uid,
-                        username: user.username,
-                        email: user.email,
-                        password: CryptoJS.AES.encrypt(user.password , process.env.SECRET).toString(),
-                        location: user.location,
-                    })
+        // Save user in your DB
+        const newUser = new User({
+          uid: userResponse.uid,
+          username: user.username,
+          email: user.email,
+          password: CryptoJS.AES.encrypt(user.password, process.env.SECRET).toString(),
+          location: user.location,
+          isAgent: user.isAgent,
+        });
 
-                    await newUser.save();
-                    res.status(201).json({status:true});
-                } catch (error) {
-                    res.status(500).json({error: 'Error occurred trying to create account'});
-                }
-            }
-        }
-    },
+        await newUser.save();
+        return res.status(201).json({ status: true });
+
+      } catch (dbError) {
+        console.error("DB error:", dbError);
+        return res.status(500).json({ error: 'Error occurred trying to create account' });
+      }
+    } else {
+      // 🔴 Catch ALL other errors here
+      console.error("Firebase error:", error);
+      return res.status(500).json({ error: 'Error checking user' });
+    }
+  }
+},
+
+
     //Login
     loginUser:  async (req, res) => {
         try {
